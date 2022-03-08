@@ -59,18 +59,26 @@ class CarAgent:
 
     def __draw_radar__(self, screen):
         """ Helper method to draw sensors/radars for improved navigability. """
+        # The way this algorithm works is that it iterates through the
+        # radars list and draws a line from the center of the car to the
+        # point on the track that the radar is detecting.
+
         for radar in self.radars:
             position = radar[0]
             pygame.draw.line(screen, (0, 255, 0), self.center, position, 1)
             pygame.draw.circle(screen, (0, 255, 0), position, 5)
+        
 
     def draw(self, screen):
         """ Major method to impose sprite across simulated environment screen. """
+        # This method is responsible for drawing the car sprite onto the screen.
         screen.blit(self.rotated_sprite, self.position)
         self.__draw_radar__(screen)
 
     def detect_collision(self, environment):
         """ Major method to perform collision detection for agent across environment space. """
+        # This algorithm is responsible for detecting collisions with the
+        # environment and setting the car's survival status accordingly.
         self.alive = True
         for corner in self.corners:
             if environment.get_at((int(corner[0]), int(corner[1]))) == self.border_color:
@@ -81,6 +89,10 @@ class CarAgent:
         # TODO: Explain what the following three lines of code are doing.
         #       What values are we trying to calculate and what impact does
         #       that data have on our overall project?
+        #              This method is responsible for calculating the 
+        #              updated coordinates of the car sprite based on the
+        #              angle and length of the car sprite.
+
         dX = math.cos(math.radians(360 - (self.angle + degree))) * length
         dY = math.sin(math.radians(360 - (self.angle + degree))) * length
         return int(self.center[0] + dX), int(self.center[1] + dY)
@@ -92,7 +104,8 @@ class CarAgent:
         #       of basic algebra to complete the Euclidean distance
         #       function algorithm below. (HINT: It's the basic 
         #       distance function you learn in algebra!)
-        return None
+        return math.sqrt(math.pow(ΔX, 2) + math.pow(ΔY, 2))
+
 
     def check_radar(self, degree, environment):
         """ Major method to check and validate positions of car respective to track-path borders. """
@@ -113,6 +126,13 @@ class CarAgent:
         # TODO: This is a deceptively complex algorithm at play. Explain
         #       what information is being created and iterated across and 
         #       why this matters for our reinforcement learning algorithm.
+        # This algorithm is responsible for creating a state
+        #  representation of the environment for the agent to
+        #  use in its decision making process.
+        #  The state is a list of lists, where each list is
+        #  a list of the distances of the car's sensors to the
+        #  rack borders.
+
         TOP_LEFT_OFFSET, TOP_RIGHT_OFFSET, BOTTOM_LEFT_OFFSET, BOTTOM_RIGHT_OFFSET = 30, 150, 210, 330
         corners = list()
         for offset in [TOP_LEFT_OFFSET, TOP_RIGHT_OFFSET, BOTTOM_LEFT_OFFSET, BOTTOM_RIGHT_OFFSET]:
@@ -152,6 +172,13 @@ class CarAgent:
         # TODO: Our `actions` object is a deceptively important data
         #       structures. Explain what this object represents and 
         #       how this data is interpreted/used by our learning algorithm.
+        # The for loop is responsible for creating a list of actions
+        #  that the agent can take in the environment.
+        # The radars are used to determine the distance to the track borders.
+        #  The actions are used to determine the angle of the car's sprite.
+        # WE then return the actions object to the agent.
+        # Which means that the agent can use this data to make decisions
+ 
         radars, actions = self.radars, [0, 0, 0, 0, 0]
         for iteration, radar in enumerate(radars):
             actions[iteration] = int(radar[1] / 30)
@@ -166,6 +193,16 @@ class CarAgent:
         # TODO: Explain how our rewarding schema is expressly calculated.
         # TODO: Are there any other/better ways of selecting rewards for
         #       our reinforcement algorithm?
+        # Our reward schema is calculated by the following formula:
+        #  - If the car is alive, we reward it with a positive value.
+        #  - If the car is dead, we reward it with a negative value.
+        # This seems like a straighforward way of rewarding the agent
+        #  for surviving. However, there are other ways of rewarding
+        #  the agent for surviving. For instance, we can reward the
+        #  agent for having a high score regardless of whether or not
+        #  the car is alive.
+
+
         return self.distance / (self.agent_parameters["X"] / 2)
 
     def rotate_center(self, image, angle):
