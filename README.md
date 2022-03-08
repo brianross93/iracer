@@ -35,4 +35,4 @@ In order for `NEAT` to function successfully, it will make use of an additional 
 
 Thanks to **Zain Raza**, **Gobind Puniani**, and **Hani Jandali**, my fantastic team of teaching assistants, for assisting me with structuring content and curricula for this ambitious course.
 
-Special thanks to **@NeuralNine** and **@monokim** for their starter repositories – their work allows for easy tutorialization and abstraction from project to challenge. 
+Special thanks to **@NeuralNine** and **@monokim** for their starter repositories – their work allows for easy tutorialization and abstraction from project to challenge. # iracer
